@@ -1,10 +1,10 @@
 // Things I need.
 var http = require('http'),
-	express = require('express'),
-	path = require('path'),
-	mongoose = require('mongoose'),
-	bodyParser = require('body-parser'),
-	errorhandler = require('errorhandler');
+    express = require('express'),
+    path = require('path'),
+    mongoose = require('mongoose'),
+    bodyParser = require('body-parser'),
+    errorhandler = require('errorhandler');
 
 // Server.
 var devApp = express();
@@ -13,7 +13,7 @@ var devApp = express();
 var db = mongoose.connect('mongodb://localhost/devwork');
 
 mongoose.connection.once('connected', function() {
-	console.log("Connected to db devwork.")
+    console.log("Connected to db devwork.")
 });
 
 // Middle-ware things.
@@ -24,17 +24,15 @@ devApp.use(errorhandler());
 // API wonders.
 var api = require('./api.js');
 
-devApp.get('/api/films', api.getAll);
-devApp.get('/api/films/:id', api.getById);
-devApp.get('/api/films/developer/:developer', api.getByDev);
-
-devApp.post('/api/films', api.post);
-
-devApp.delete('/api/films/:id', api.remove);
-
 devApp.get('/api', function (req, res) {
   res.send('API is running');
 });
+
+devApp.get('/api/films', api.getAll);
+devApp.get('/api/films/:id', api.getById);
+devApp.get('/api/films/developer/:developer', api.getByDev);
+devApp.post('/api/films', api.post);
+devApp.delete('/api/films/:id', api.remove);
 
 // Listen to 9090.
 devApp.listen(9090);
