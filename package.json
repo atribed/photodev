@@ -1,0 +1,33 @@
+{
+  "name": "developer_timer",
+  "version": "0.0.1",
+  "description": "A timer to assist with film development written in JavaScript.",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.9.3",
+    "errorhandler": "^1.2.3",
+    "express": "^4.10.2",
+    "mongoose": "^3.8.19",
+    "path": "^0.4.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atribed/photodev.git"
+  },
+  "keywords": [
+    "javascript",
+    "node",
+    "express",
+    "mongodb"
+  ],
+  "author": "Arthur Gorka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atribed/photodev/issues"
+  },
+  "homepage": "https://github.com/atribed/photodev"
+}
