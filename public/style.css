@@ -2,3 +2,22 @@
     height: 200px;
     width: 200px;
 }
+
+#wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    text-align: center;
+}
+
+#startTime {
+    margin-top:20px;
+}
+
+#timer {
+    font-size:36px;
+}
+
+input {
+    margin-top: 15px;
+}

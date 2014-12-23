@@ -12,14 +12,36 @@ var TIMES = {
     'RINSE': 300
 };
 
-
 // Determines whether or not space bar can start a timer.
 var TIMER_RUNNING = false;
-
 
 // Initial step for the different development processes.
 var TIMER_STEP = 0;
 
+// Timer control.
+var TIMER = {
+    start: function(time, message) {
+        TIMER_RUNNING = true;
+
+        this.interval = setInterval(function() {
+            var timerDiv = document.getElementById('timer');
+            if (time <= 0) {
+                TIMER_RUNNING = false;
+                timerDiv.innerHTML = message;
+                clearInterval(this.interval);
+            } else {
+                time = time - 1;
+                var minutes = Math.floor(time / 60);
+                var seconds = time % 60;
+                var printedSeconds = seconds > 9 ? seconds : '0' + seconds;
+                timerDiv.innerHTML = minutes + ':' + printedSeconds;
+            }
+        }, 50);
+    },
+    stop: function() {
+        clearInterval(this.interval);
+    }
+};
 
 // Get data.
 var getRequest = function(url) {
@@ -46,6 +68,8 @@ var displayFilms = function() {
 
     // Clears previous HTML incase user changes what was in the dropdown.
     displayDiv.innerHTML = '';
+
+    document.getElementById('headerFilms').style.display = 'block';
 
     for (var i = 0; i < requestResultLength; i++) {
         var thisInput = document.createElement('input');
@@ -80,6 +104,8 @@ var setTime = function(e) {
 
         startTimerListener();
 
+        document.getElementById('headerTimes').style.display = 'block';
+        document.getElementById('startTime').style.display = 'block';
         timeContainer.innerHTML = 'Development Time: ' + devTime + ' minutes';
 
     }
@@ -92,38 +118,23 @@ var updateTimeOnChange = function() {
     displayDiv.addEventListener('change', setTime, false);
 };
 
-
-// Prints the timer.
-var printTimer = function(time, message) {
-    TIMER_RUNNING = true;
-    var timerDiv = document.getElementById('timer');
-
-    var interval = setInterval(function() {
-        if (time <= 0) {
-            TIMER_RUNNING = false;
-            timerDiv.innerHTML = message;
-            clearInterval(interval);
-        } else {
-            time = time - 1;
-            var minutes = Math.floor(time / 60);
-            var seconds = time % 60;
-            var printedSeconds = seconds > 9 ? seconds : '0' + seconds;
-            timerDiv.innerHTML = minutes + ':' + printedSeconds;
-        }
-    }, 1000);
-};
-
-
+// Acts based on stage in development process.
 var startTimer = function() {
+    var stepDiv = document.getElementById('timerStep');
+    TIMER.stop();
     switch (TIMER_STEP) {
         case 0:
             document.getElementById('timerHeader').style.display = 'block';
             TIMER_STEP++;
-            printTimer(TIMES.DEV, 'DEV COMPLETE');
+            TIMER.start(TIMES.DEV, 'DEV COMPLETE');
+            stepDiv.innerHTML = '(developer)'
+            document.getElementById('startTime').innerHTML = 'Next';
+            document.getElementById('startTime').className = 'btn btn-warning btn-large';
             break;
         case 1:
             TIMER_STEP++;
-            printTimer(TIMES.STOPBATH, 'STOPBATH COMPLETE');
+            TIMER.start(TIMES.STOPBATH, 'STOPBATH COMPLETE');
+            stepDiv.innerHTML = '(stopbath)'
             break;
         case 2:
             TIMER_STEP++;
@@ -131,14 +142,17 @@ var startTimer = function() {
             var rapidFixer = document.getElementById('rapid');
             TIMES.FIXER = rapidFixer.checked ? 120 : 600;
 
-            printTimer(TIMES.FIXER, 'FIXER COMPLETE');
+            TIMER.start(TIMES.FIXER, 'FIXER COMPLETE');
+            stepDiv.innerHTML = '(fixer)'
             break;
         case 3:
             TIMER_STEP++;
-            printTimer(TIMES.HYPO, 'HYPO COMPLETE');
+            TIMER.start(TIMES.HYPO, 'HYPO COMPLETE');
+            stepDiv.innerHTML = '(hypo)'
             break;
         case 4:
-            printTimer(TIMES.RINSE, 'RINSE COMPLETE');
+            TIMER.start(TIMES.RINSE, 'RINSE COMPLETE');
+            stepDiv.innerHTML = '(rinse)'
             break;
         default:
             console.log('oops');
@@ -146,10 +160,13 @@ var startTimer = function() {
     }
 };
 
-
+// Binds listeners.
 var startTimerListener = function() {
+    // Spacebar triggers the timer to start and move forward if finished before
+    // the timer runs out.
     var startOnKeydown = function(e) {
-        if (TIMER_RUNNING === false && e.keyCode === 32) {
+        console.log(e.keyCode);
+        if (e.keyCode === 32) {
             startTimer();
         }
     };
